@@ -36,16 +36,60 @@ app.get('/feed', async (req, res) => {
   }
 });
 
+// add user
 app.post('/signup', async (req, res) => {
-  // console.log(req.body);
-
-  // const user = new User(req.body);
+  const user = new User(req.body);
 
   try {
     await user.save();
-    res.send('User added Succesfully');
-  } catch {
+    res.send('User added Successfully');
+  } catch (err) {
     res.status(500).send('Error:' + err.message);
+  }
+});
+
+// delete user
+
+app.delete('/user', async (req, res) => {
+  const userId = req.body.userId;
+
+  try {
+    const user = await User.findByIdAndDelete({ _id: userId });
+    // const user = await User.findByIdAndDelete(userId);
+
+    res.send('User deleted successfully');
+  } catch (err) {
+    res.status(400).send('Something went wrong');
+  }
+});
+
+// update user data
+app.patch('/user/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  const data = req.body;
+  // console.log(userId);
+  try {
+    const allowedUpdates = ['skills', 'photoUrl', 'about', 'age', 'gender'];
+
+    isUpdateAllowed = Object.keys(data).every((k) =>
+      allowedUpdates.includes(k)
+    );
+
+    if (!isUpdateAllowed) {
+      throw new Error('Update not allowed');
+    }
+
+    if (data?.skills.length > 10) {
+      throw new Error('Cannot add more than 10 skills');
+    }
+    const user = await User.findByIdAndUpdate({ _id: userId }, data, {
+      returnDocument: 'after',
+      runValidators: true,
+    });
+    console.log(user);
+    res.send('User updated successfully');
+  } catch (err) {
+    res.status(400).send('Something went wrong' + err.message);
   }
 });
 
