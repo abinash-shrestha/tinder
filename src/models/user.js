@@ -12,10 +12,12 @@ const userSchema = new mongoose.Schema(
     },
     lastName: {
       type: String,
+      required: 'true',
     },
     emailId: {
       type: String,
       required: 'true',
+      unique: 'true',
       lowercase: 'true',
       trim: 'true',
       validate(value) {
