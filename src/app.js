@@ -6,6 +6,7 @@ const { validateSignUpData } = require('./utils/validation');
 const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
+const { userAuth } = require('./middlewares/auth');
 
 app.use(express.json());
 app.use(cookieParser());
@@ -56,10 +57,14 @@ app.post('/login', async (req, res) => {
 
     if (isPasswordValid) {
       // JWT TOKEN
-      const token = await jwt.sign({ _id: user._id }, 'devtinder1357');
+      const token = await jwt.sign({ _id: user._id }, 'devtinder1357', {
+        expiresIn: '7d',
+      });
 
       //SEND COOKIES
-      res.cookie('token', token);
+      res.cookie('token', token, {
+        expires: new Date(Date.now() + 8 * 3600000),
+      });
       res.send('Login Successful');
     } else {
       throw new Error('Invalid Credentials');
@@ -69,23 +74,10 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.get('/profile', async (req, res) => {
+//get profile data
+app.get('/profile', userAuth, async (req, res) => {
   try {
-    const cookies = req.cookies;
-    const { token } = cookies;
-
-    if (!token) {
-      throw new Error('Invalid Token');
-    }
-
-    const decodedMessage = await jwt.verify(token, 'devtinder1357');
-
-    const { _id } = decodedMessage;
-
-    const user = await User.findById(_id);
-    if (!user) {
-      throw new Error('User not found');
-    }
+    const user = req.user;
     res.send(user);
   } catch (err) {
     res.status(400).send('Error: ' + err.message);
