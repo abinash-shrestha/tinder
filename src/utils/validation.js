@@ -1,4 +1,5 @@
 const validator = require('validator');
+const bcrypt = require('bcrypt');
 
 const validateSignUpData = (req) => {
   const { firstName, lastName, emailId, password } = req.body;
@@ -29,4 +30,23 @@ const validateEditProfileData = (req) => {
   return isEditAllowed;
 };
 
-module.exports = { validateSignUpData, validateEditProfileData };
+const validatePasswordChangeData = async (user, oldPassword, newPassword) => {
+  if (!user) {
+    throw new Error('Invalid Credentials');
+  }
+
+  const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+  if (!isPasswordValid) {
+    throw new Error('Incorrect Old Password');
+  }
+
+  if (!validator.isStrongPassword(newPassword)) {
+    throw new Error('Password is not strong enough');
+  }
+};
+
+module.exports = {
+  validateSignUpData,
+  validateEditProfileData,
+  validatePasswordChangeData,
+};

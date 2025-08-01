@@ -1,7 +1,10 @@
 const express = require('express');
 const profileRouter = express.Router();
 const { userAuth } = require('../middlewares/auth');
-const { validateEditProfileData } = require('../utils/validation');
+const {
+  validateEditProfileData,
+  validatePasswordChangeData,
+} = require('../utils/validation');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const validator = require('validator');
@@ -45,33 +48,18 @@ profileRouter.patch('/profile/edit', userAuth, async (req, res) => {
 profileRouter.patch('/profile/changepassword', userAuth, async (req, res) => {
   try {
     const { emailId, oldPassword, newPassword } = req.body;
-
-    if (oldPassword === newPassword) {
-      throw new Error('Old Password and New Password cannot be same');
-    }
     const user = await User.findOne({ emailId: emailId });
 
-    if (!user) {
-      throw new Error('Invalid Credentials');
-    }
-
-    const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
-    if (!isPasswordValid) {
-      throw new Error('Incorrect Old Password ');
-    }
-
-    if (!validator.isStrongPassword(newPassword)) {
-      throw new Error('Password is not strong enough');
-    }
+    await validatePasswordChangeData(user, oldPassword, newPassword);
 
     const passwordHash = await bcrypt.hash(newPassword, 10);
 
     user.password = passwordHash;
     await user.save();
 
-    res.send('password changed');
+    res.send('Password Changed Succesfully');
   } catch (err) {
-    res.send('Error:' + err);
+    res.send('Error: ' + err.message);
   }
 });
 
