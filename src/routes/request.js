@@ -48,8 +48,11 @@ requestRouter.post(
 
       const data = await connectionRequest.save();
 
+      const action =
+        requestStatus === 'interested' ? `is interested in` : `ignored`;
+
       res.json({
-        message: `Connection Request sent Successfully`,
+        message: `${req.user.firstName} ${action} ${toUser.firstName}`,
         data,
       });
     } catch (err) {
