@@ -4,6 +4,7 @@
         - Identity of sender and receiver (fromUserId and toUserId)
         - request status of connection [enum]
     - API
+        #ConnectionRequestRouter
         ## For sending connection request
         - POST: /request/send/:status/:toUserId
         - Status of Request : interested, ignored
@@ -22,3 +23,7 @@
         - Validation
             - for :status
             - for requestId, to find connection request at db
+
+        #UserRouter
+        ## For viewing all pending connection request
+        - GET: /request/receive
