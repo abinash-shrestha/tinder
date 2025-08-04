@@ -26,4 +26,9 @@
 
         #UserRouter
         ## For viewing all pending connection request
-        - GET: /request/receive
+        - GET: /user/request/received
+        - used ref and populate to fetch user info from id of sender
+
+        ## For viewing connection (which user has accepted the connection)
+        - GET: /user/connections
+        -
