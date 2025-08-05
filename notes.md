@@ -31,4 +31,7 @@
 
         ## For viewing connection (which user has accepted the connection)
         - GET: /user/connections
-        -
+
+        ## For displaying feed
+        - GET /user/feed
+        - validations will be user should not be shown their own profile, already connected profile, req sent/received profile, ignored profile
