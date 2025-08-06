@@ -1,4 +1,4 @@
-## Logical DB Query Compound Indexes
+## NOTES
 
     - Create Model for Connection Request
         - Identity of sender and receiver (fromUserId and toUserId)
@@ -35,3 +35,4 @@
         ## For displaying feed
         - GET /user/feed
         - validations will be user should not be shown their own profile, already connected profile, req sent/received profile, ignored profile
+        - pagination filter to limit number of users sent back to feed to load using skip and limit method in mongoDB
