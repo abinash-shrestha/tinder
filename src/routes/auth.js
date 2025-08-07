@@ -44,7 +44,8 @@ authRouter.post('/login', async (req, res) => {
     // console.log(user);
 
     if (!user) {
-      throw new Error('Invalid Credentials');
+      return res.status(401).send('Login Required');
+      // throw new Error('Invalid Credentials');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -60,7 +61,7 @@ authRouter.post('/login', async (req, res) => {
       res.cookie('token', token, {
         expires: new Date(Date.now() + 8 * 3600000),
       });
-      res.send('Login Successful');
+      res.json({ message: 'Login Successful', data: user });
     } else {
       throw new Error('Invalid Credentials');
     }
