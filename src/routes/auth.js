@@ -27,8 +27,16 @@ authRouter.post('/signup', async (req, res) => {
       emailId,
       password: passwordHash,
     });
-    await user.save();
-    res.send('User added Successfully');
+    const savedUser = await user.save();
+    const token = await jwt.sign({ _id: savedUser._id }, 'devtinder1357', {
+      expiresIn: '7d',
+    });
+
+    //SEND COOKIES
+    res.cookie('token', token, {
+      expires: new Date(Date.now() + 8 * 3600000),
+    });
+    res.json({ message: 'Sign up Successful', data: savedUser });
   } catch (err) {
     res.status(400).send('Error:' + err.message);
   }
@@ -49,7 +57,6 @@ authRouter.post('/login', async (req, res) => {
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    // console.log(isPasswordValid);
 
     if (isPasswordValid) {
       // JWT TOKEN

@@ -42,13 +42,15 @@ const userSchema = new mongoose.Schema(
     gender: {
       type: String,
       validate(value) {
-        if (!['male', 'female', 'others'].includes(value)) {
+        if (!['Male', 'Female', 'Others'].includes(value)) {
           throw new Error('Gender is not valid');
         }
       },
     },
     photoUrl: {
       type: String,
+      default:
+        'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_640.png',
     },
     about: {
       type: String,

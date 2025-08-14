@@ -57,9 +57,9 @@ profileRouter.patch('/profile/changepassword', userAuth, async (req, res) => {
     user.password = passwordHash;
     await user.save();
 
-    res.send('Password Changed Succesfully');
+    res.json({ message: 'Password Changed Succesfully', data: user });
   } catch (err) {
-    res.send('Error: ' + err.message);
+    res.status(400).json('Error: ' + err.message);
   }
 });
 
