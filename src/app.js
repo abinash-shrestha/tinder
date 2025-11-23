@@ -23,7 +23,7 @@ connectDB()
   .then(() => {
     console.log('Database connection established');
     app.listen(process.env.PORT, () => {
-      console.log('Listening on port: ' + process.env.PORT);
+      console.log('Listening on port: ' + 3000);
     });
   })
   .catch(() => {
