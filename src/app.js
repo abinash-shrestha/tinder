@@ -22,7 +22,7 @@ app.use('/', userRouter);
 connectDB()
   .then(() => {
     console.log('Database connection established');
-    app.listen(process.env.PORT, () => {
+    app.listen(3000, () => {
       console.log('Listening on port: ' + 3000);
     });
   })
