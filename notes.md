@@ -36,3 +36,26 @@
         - GET /user/feed
         - validations will be user should not be shown their own profile, already connected profile, req sent/received profile, ignored profile
         - pagination filter to limit number of users sent back to feed to load using skip and limit method in mongoDB
+
+    - AWS
+        set up ec2 instance
+        chmod 400 "filename.pem"
+        ssh -i "filename.pem" ubuntu@ec2-44-192-72-225.compute-1.amazonaws.com
+        install node on your server (same version as local machine)
+
+        - Frontend
+            clone from github
+            install packages
+            npm run build
+            sudo apt update
+            sudo apt install nginx
+            sudo systemctl start nginx
+            sudo systemctl enable nginx
+            copy code (build) to /var/www/html
+                scp -r dist/* /var/www/html
+            enabled port 80
+            only supports http for now
+
+        - Backend
+            npm i
+
